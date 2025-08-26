@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login page</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-image: url('https://cdn.pixabay.com/photo/2022/08/08/19/36/landscape-7373484_640.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    ul li {
+        list-style-type: none;
+        display: inline;
+        padding: 19px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+    }
+     ul li:hover{
+        cursor: pointer;
+        color: rgb(60, 117, 136);
+     }
+    .nav {
+
+        left: 270px;
+    }
+
+    .nav .srch {
+        display: flex;
+    }
+
+    .nav {
+        display: flex;
+    }
+
+    button {
+        background: rgb(238, 166, 30);
+        border: none;
+        border-radius: 9px;
+        padding: 9px 52px 9px 54px;
+        text-align: center;
+    }
+    button:hover{
+        cursor: pointer;
+        background-color: rgb(223, 48, 48);
+    }
+
+    input {
+        border: none;
+        background: transparent;
+    }
+
+    .nav {
+        align-items: center;
+        justify-content: flex-end;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    main {
+        position: absolute;
+        left: 170px;
+        top: 200px;
+        width: 50vh;
+        font-size: large;
+        color: gray;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    p {
+        font-size: larger;
+        letter-spacing: 2px;
+    }
+
+    h1 {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    a {
+        text-decoration: none;
+        color:orange;
+    }
+
+    .login {
+        color: white;
+        position: absolute;
+        top: 60%;
+        right: 9%;
+        transform: translateY(-50%);
+        padding: 50px;
+        background-color: rgba(170, 229, 226, 0.332);
+        text-align: center;
+        border-radius: 23px;
+        
+
+    }
+
+    input {
+        border-top: none;
+        border-left: none;
+        border-left: none;
+        border-bottom: 2px solid orange;
+    }
+
+    span {
+        background-color: white;
+    }
+
+    .lst {
+        position: relative;
+        top: -5px;
+        color:orange;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    a:hover{
+        color:white;
+    }
+    .lgsec{
+        font-family: Arial, Helvetica, sans-serif;
+    }
+</style>
+
+<body>
+    <nav>
+        <div class="nav">
+            <ul>
+                <li>HOME</li>
+                <li>ABOUT</li>
+                <li>SERVICE</li>
+                <li>DESIGN</li>
+                <li>CONTACT</li>
+            </ul>
+            <div class="srch">
+                <input type="text" name="enter your text" placeholder="enter your search">
+                <button>Search</button>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <h1>Wed Design & <br>
+            <a href="#">Development</a> <br>Course
+        </h1>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis, praesentium ex minima cum voluptates
+            optio corrupti, dignissimos repudiandae maiores delectus dolore? Ad odit quisquam facere libero cum incidunt
+            labore aut consectetur atque est, optio corrupti deserunt consequuntur rem, non neque a, asperiores iure
+            veritatis. Dolorem optio fugiat quo,.</p>
+        <button>JOIN US</button>
+    </main>
+    <div class="login">
+        <div class="btn">
+            <span> <button>Login Here</button></span>
+        </div>
+        <div class="lgsec">
+            <p><input type="text" name="email" placeholder="Enter your email"></p>
+            <p><input type="text" name="password" placeholder="Enter your password"></p>
+            <button>Login</button>
+            <p>Don't have an account? <br><a href="#">Sign up</a> here</p>
+        </div>
+        <div class="lst">
+            <a href="#">Log in with</a>
+        </div>
+        <div class="icon">
+            <a href="https://www.facebook.com/yourprofile" target="_blank">
+                <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+
+            <a href="https://www.instagram.com/yourprofile" target="_blank">
+                <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+            <a href="https://www.instagram.com/yourprofile" target="_blank">
+                <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+            <a href="https://www.instagram.com/yourprofile" target="_blank">
+                <ion-icon name="logo-youtube"></ion-icon>
+            </a>
+            <a href="https://www.instagram.com/yourprofile" target="_blank">
+                <ion-icon name="logo-google"></ion-icon>
+            </a>
+            <a href="https://www.instagram.com/yourprofile" target="_blank">
+                <ion-icon name="logo-LinkedIn"></ion-icon>
+            </a>
+        </div>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
