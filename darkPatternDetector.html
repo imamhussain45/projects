@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Pattern Detector - Demo & Testing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: #64748b;
+        }
+
+        button.secondary:hover {
+            background: #475569;
+        }
+
+        button.danger {
+            background: #dc2626;
+        }
+
+        button.danger:hover {
+            background: #b91c1c;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .panel h2 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .severity-high {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+
+        .severity-medium {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .severity-low {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .detection-item {
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+
+        .detection-item.high {
+            border-left-color: #dc2626;
+        }
+
+        .detection-item.medium {
+            border-left-color: #f59e0b;
+        }
+
+        .detection-item.low {
+            border-left-color: #3b82f6;
+        }
+
+        .detection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .detection-title {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge.medium {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .badge.low {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        .detection-details {
+            font-size: 0.9em;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .recommendations {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .recommendations h4 {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendations li {
+            padding: 4px 0;
+            font-size: 0.85em;
+            color: #475569;
+        }
+
+        .recommendations li:before {
+            content: "→ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        #resultsLog {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        #resultsLog::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #resultsLog::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        #resultsLog::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        #resultsLog::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .examples {
+            margin-top: 30px;
+        }
+
+        .example-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .example-section h3 {
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+
+        /* Example dark patterns for testing */
+        .example-urgency {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .example-confirmshaming {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .example-confirmshaming button:last-child {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            font-size: 0.85em;
+        }
+
+        .example-scarcity {
+            background: #fee2e2;
+            border: 2px solid #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f4f6;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Dark Pattern Detector</h1>
+            <p class="subtitle">AI-Powered + Rule-Based Detection System</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <button onclick="runDetection()">🚀 Scan Page</button>
+                <button onclick="highlightPatterns()" class="secondary">🎯 Highlight Patterns</button>
+                <button onclick="removeHighlights()" class="secondary">✨ Clear Highlights</button>
+                <button onclick="exportResults()" class="secondary">📥 Export Results</button>
+                <button onclick="clearResults()" class="danger">🗑️ Clear Results</button>
+            </div>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="results">
+            <div class="panel">
+                <h2>📊 Statistics</h2>
+                <div id="statistics">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Dark Patterns Found</div>
+                        <div class="stat-value" id="totalCount">0</div>
+                    </div>
+                    <div class="stat-card severity-high">
+                        <div class="stat-label">High Severity</div>
+                        <div class="stat-value" id="highCount">0</div>
+                    </div>
+                    <div class="stat-card severity-medium">
+                        <div class="stat-label">Medium Severity</div>
+                        <div class="stat-value" id="mediumCount">0</div>
+                    </div>
+                    <div class="stat-card severity-low">
+                        <div class="stat-label">Low Severity</div>
+                        <div class="stat-value" id="lowCount">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>🚨 Detected Patterns</h2>
+                <div id="resultsLog">
+                    <p style="color: #94a3b8; text-align: center; padding: 40px;">
+                        Click "Scan Page" to start detection
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Dark Patterns for Testing -->
+        <div class="examples">
+            <div class="example-section">
+                <h3>🧪 Test Examples (These contain dark patterns)</h3>
+                
+                <div class="example-urgency">
+                    <strong>⏰ HURRY! Only 3 items left in stock!</strong>
+                    <p>Sale ends in 02:45:33</p>
+                    <button>BUY NOW - Limited Time Offer!</button>
+                </div>
+
+                <div class="example-confirmshaming">
+                    <button>Yes, I want to save 50%!</button>
+                    <button>No thanks, I prefer paying full price</button>
+                </div>
+
+                <div class="example-scarcity">
+                    <strong>🔥 27 people are viewing this right now!</strong>
+                    <p>Don't miss out - this deal is almost gone!</p>
+                </div>
+
+                <div style="margin: 10px 0;">
+                    <label>
+                        <input type="checkbox" checked>
+                        Sign up for our newsletter and share my data with partners
+                    </label>
+                </div>
+
+                <div style="margin: 10px 0; font-size: 0.8em; color: #64748b;">
+                    <p>Free trial - No credit card required*</p>
+                    <p style="font-size: 0.7em; opacity: 0.5;">*Automatically charges $99.99 after 7 days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load dependencies -->
+    <script src="darkPatternRules.js"></script>
+    <script src="aiDetector.js"></script>
+    <script src="darkPatternDetector.js"></script>
+
+    <script>
+        let detector;
+        let lastResults;
+
+        // Initialize detector
+        window.addEventListener('DOMContentLoaded', () => {
+            detector = new DarkPatternDetector();
+            showStatus('Ready to scan for dark patterns', 'info');
+        });
+
+        // Run detection
+        async function runDetection() {
+            showStatus('Scanning page for dark patterns...', 'info');
+            document.getElementById('resultsLog').innerHTML = '<div class="loading"></div>';
+
+            try {
+                lastResults = await detector.scanPage();
+                displayResults(lastResults);
+                updateStatistics(lastResults);
+                showStatus(`✅ Scan complete! Found ${lastResults.detections.length} dark patterns`, 'success');
+            } catch (error) {
+                console.error('Detection error:', error);
+                showStatus('❌ Error during scan: ' + error.message, 'error');
+            }
+        }
+
+        // Display results
+        function displayResults(results) {
+            const resultsLog = document.getElementById('resultsLog');
+            
+            if (results.detections.length === 0) {
+                resultsLog.innerHTML = '<p style="color: #10b981; text-align: center; padding: 40px;">✅ No dark patterns detected!</p>';
+                return;
+            }
+
+            let html = '';
+            results.detections.forEach((detection, index) => {
+                const ruleNames = detection.ruleMatches.map(r => r.ruleName).join(', ');
+                const aiPatterns = detection.aiDetection ? detection.aiDetection.patterns.join(', ') : 'None';
+                
+                html += `
+                    <div class="detection-item ${detection.severity}">
+                        <div class="detection-header">
+                            <span class="detection-title">#${index + 1} ${ruleNames || 'AI Detection'}</span>
+                            <span class="badge ${detection.severity}">${detection.severity}</span>
+                        </div>
+                        <div class="detection-details">
+                            <strong>Element:</strong> ${detection.elementInfo.tagName}
+                            ${detection.elementInfo.className ? `<br><strong>Class:</strong> ${detection.elementInfo.className}` : ''}
+                            <br><strong>Text:</strong> "${detection.elementInfo.text.substring(0, 80)}..."
+                            <br><strong>Confidence:</strong> ${(detection.confidence * 100).toFixed(1)}%
+                        </div>
+                        ${detection.recommendations.length > 0 ? `
+                            <div class="recommendations">
+                                <h4>Recommendations:</h4>
+                                <ul>
+                                    ${detection.recommendations.map(r => `<li>${r}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            resultsLog.innerHTML = html;
+        }
+
+        // Update statistics
+        function updateStatistics(results) {
+            document.getElementById('totalCount').textContent = results.summary.totalDetections;
+            document.getElementById('highCount').textContent = results.summary.bySeverity.high || 0;
+            document.getElementById('mediumCount').textContent = results.summary.bySeverity.medium || 0;
+            document.getElementById('lowCount').textContent = results.summary.bySeverity.low || 0;
+        }
+
+        // Highlight patterns on page
+        function highlightPatterns() {
+            if (!lastResults || lastResults.detections.length === 0) {
+                showStatus('No detections to highlight. Run a scan first.', 'error');
+                return;
+            }
+            detector.highlightDetections();
+            showStatus('Highlighted detected patterns on page', 'success');
+        }
+
+        // Remove highlights
+        function removeHighlights() {
+            detector.removeHighlights();
+            showStatus('Removed highlights', 'info');
+        }
+
+        // Export results
+        function exportResults() {
+            if (!lastResults) {
+                showStatus('No results to export. Run a scan first.', 'error');
+                return;
+            }
+
+            const json = detector.exportResults();
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dark-pattern-report-${new Date().toISOString()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showStatus('Results exported successfully', 'success');
+        }
+
+        // Clear results
+        function clearResults() {
+            lastResults = null;
+            document.getElementById('resultsLog').innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 40px;">Click "Scan Page" to start detection</p>';
+            document.getElementById('totalCount').textContent = '0';
+            document.getElementById('highCount').textContent = '0';
+            document.getElementById('mediumCount').textContent = '0';
+            document.getElementById('lowCount').textContent = '0';
+            removeHighlights();
+            showStatus('Results cleared', 'info');
+        }
+
+        // Show status message
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.className = `status ${type}`;
+            status.textContent = message;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
